@@ -1,0 +1,27 @@
+.header {
+  display: flex;
+
+  ul {
+    display: flex;
+    flex-flow: row nowrap;
+    margin: auto;
+
+    gap: 1rem;
+
+    padding: 2rem 0;
+
+    li {
+      font-size: 2rem;
+
+      a {
+        color: var(--primary-color);
+        text-decoration: none;
+
+        &:hover {
+          color: var(--secondary-color);
+        }
+
+      }
+    }
+  }
+}

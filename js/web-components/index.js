@@ -1,0 +1,5 @@
+export * from './header.js'
+export * from './about.js'
+export * from './collatz-conjecture.js'
+export * from './language-switch.js'
+export * from './why-section.js'
