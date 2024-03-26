@@ -1,0 +1,47 @@
+@import "reset.css";
+
+@import "components/header.css";
+
+:root {
+  --steel-pink: #cb48b7ff;
+  --lavender-web: #c5d1ebff;
+  --powder-blue: #92afd7ff;
+  --rich-black: #061826ff;
+  --olivine: #7eb77fff;
+
+  --primary-color: var(--steel-pink);
+  --secondary-color: var(--powder-blue);
+  --success-color: var(--olivine);
+  --dark-color: var(--rich-black);
+  --light-color: var(--lavender-web);
+}
+
+.space-mono-regular {
+  font-family: "Space Mono", monospace;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.space-mono-bold {
+  font-family: "Space Mono", monospace;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.space-mono-regular-italic {
+  font-family: "Space Mono", monospace;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.space-mono-bold-italic {
+  font-family: "Space Mono", monospace;
+  font-weight: 700;
+  font-style: italic;
+}
+
+body {
+  background-color: var(--dark-color);
+  font-family: "Space Mono", Arial, sans-serif;
+  text-transform: uppercase;
+}
