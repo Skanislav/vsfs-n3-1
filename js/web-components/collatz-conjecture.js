@@ -5,20 +5,30 @@ class CollatzConjecture extends HTMLElement {
     super();
   }
 
-  calculateTheNextNumbers = (current, results) => {
-    if (current === 1) {
-      return results;
-    }
-
-    if (current % 2 === 0) {
-      current = current / 2;
-    } else {
-      current = 3 * current + 1;
-    }
-
-    results.push(current);
-    return this.calculateTheNextNumbers(current, results);
+  calculateTheNextNumbers = (current, ul, delay, delayIncrement, n) => {
+  if (current === 1) {
+    return;
   }
+
+  if (current % 2 === 0) {
+    current = current / 2;
+  } else {
+    current = 3 * current + 1;
+  }
+
+  setTimeout(() => {
+    const li = document.createElement("li");
+
+    // casually flexing the math skills here
+    li.style.marginBottom = `${(Math.log(current) * n)}px`;
+
+    li.textContent = current;
+    ul.appendChild(li);
+    ul.scrollLeft = ul.scrollWidth;
+
+    this.calculateTheNextNumbers(current, ul, delay, delayIncrement, n + 1);
+  }, delay);
+}
 
   updateTranslations(language, elements) {
     elements.title.textContent = AvailableLanguages[language][appText.main.title];
@@ -65,30 +75,15 @@ class CollatzConjecture extends HTMLElement {
         return;
       }
 
-      const results = this.calculateTheNextNumbers(number, [number])
-
-      let delay = 0;
-      const delayIncrement = 100; // Adjust this value to control the speed of the animation
+      let delay = 20;
+      const delayIncrement = 1000; // Adjust this value to control the speed of the animation
+      let n = 0
 
       const ul = document.createElement("ul");
       ul.setAttribute("class", "results");
       wrapper.appendChild(ul);
 
-      results.forEach((result, index) => {
-        setTimeout(() => {
-          const li = document.createElement("li");
-
-          const logaritm = Math.log(result);
-          li.style.marginBottom = `${logaritm * index}px`;
-
-          li.textContent = result;
-          ul.appendChild(li);
-          ul.scrollLeft = ul.scrollWidth;
-        }, delay);
-
-        delay += delayIncrement;
-      });
-
+      this.calculateTheNextNumbers(number, ul, delay, delayIncrement, n);
     })
 
     const style = document.createElement("style");
