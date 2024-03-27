@@ -6,29 +6,32 @@ class CollatzConjecture extends HTMLElement {
   }
 
   calculateTheNextNumbers = (current, ul, delay, delayIncrement, n) => {
-  if (current === 1) {
-    return;
+    if (n !== 0) {
+      if (current === 1) {
+        return;
+      }
+
+      if (current % 2 === 0) {
+        current = current / 2;
+      } else {
+        current = 3 * current + 1;
+      }
+    }
+
+    setTimeout(() => {
+      const li = document.createElement("li");
+
+      // casually flexing the math skills here
+      li.style.marginBottom = `${(Math.log(current) * n)}px`;
+
+      li.textContent = current;
+      ul.appendChild(li);
+      ul.scrollLeft = ul.scrollWidth;
+      this.observer.observe(li)
+
+      this.calculateTheNextNumbers(current, ul, delay, delayIncrement, n + 1);
+    }, delay);
   }
-
-  if (current % 2 === 0) {
-    current = current / 2;
-  } else {
-    current = 3 * current + 1;
-  }
-
-  setTimeout(() => {
-    const li = document.createElement("li");
-
-    // casually flexing the math skills here
-    li.style.marginBottom = `${(Math.log(current) * n)}px`;
-
-    li.textContent = current;
-    ul.appendChild(li);
-    ul.scrollLeft = ul.scrollWidth;
-
-    this.calculateTheNextNumbers(current, ul, delay, delayIncrement, n + 1);
-  }, delay);
-}
 
   updateTranslations(language, elements) {
     elements.title.textContent = AvailableLanguages[language][appText.main.title];
@@ -44,22 +47,13 @@ class CollatzConjecture extends HTMLElement {
     wrapper.setAttribute("class", "collatz");
 
     const title = document.createElement("h1");
-    title.textContent = "3n + 1 problém";
-
     const content = document.createElement("p");
-    content.textContent = `
-        This is the visual representation of the Collatz Conjecture.
-
-        Please enter a number and see how it behaves.
-    `;
 
     const input = document.createElement("input");
     input.setAttribute("type", "number");
-    input.setAttribute("placeholder", "Enter a number");
     input.setAttribute("id", "collatz-input");
 
     const button = document.createElement("button");
-    button.textContent = "Calculate";
     button.setAttribute("id", "collatz-button");
     button.addEventListener("click", (e) => {
       const removeResults = wrapper.querySelector(".results");
@@ -75,6 +69,11 @@ class CollatzConjecture extends HTMLElement {
         return;
       }
 
+      if (number < 0) {
+        alert("Please enter a positive number");
+        return;
+      }
+
       let delay = 20;
       const delayIncrement = 1000; // Adjust this value to control the speed of the animation
       let n = 0
@@ -82,6 +81,25 @@ class CollatzConjecture extends HTMLElement {
       const ul = document.createElement("ul");
       ul.setAttribute("class", "results");
       wrapper.appendChild(ul);
+
+      this.observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const getRandomHexColor = () => {
+              /*
+              * Generate a random hex color
+               */
+              return "#" + Math.floor(Math.random() * 16777215).toString(16);
+            }
+            entry.target.style.color = getRandomHexColor();
+          }
+        });
+      }, {
+        root: ul,
+        rootMargin: "0px",
+        threshold: 0.1
+      });
+
 
       this.calculateTheNextNumbers(number, ul, delay, delayIncrement, n);
     })
@@ -100,7 +118,7 @@ class CollatzConjecture extends HTMLElement {
       .collatz {
         margin-top: 50px;
         margin: 0 auto;
-        max-width: 800px;
+        max-width: 80vw;
         padding: 20px;
 
         h1 {
@@ -123,10 +141,13 @@ class CollatzConjecture extends HTMLElement {
         align-items: flex-end;
 
         overflow: auto;
+        min-width: 600px;
+        min-height: 200px;
 
         li {
         color: var(--primary-color);
         animation: slideInFromTop 0.5s ease;
+        transition: all 0.5s;
 
          &::marker {
            content: "";
